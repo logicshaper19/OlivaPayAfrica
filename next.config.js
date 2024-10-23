@@ -3,10 +3,9 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   eslint: {
-    ignoreDuringBuilds: true,
-  },
-  experimental: {
-    appDir: true,
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: false,
   },
   webpack: (config, { isServer }) => {
     config.resolve.fallback = {

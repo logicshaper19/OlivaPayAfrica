@@ -55,7 +55,6 @@ export default function AddBenefit() {
       toast({
         title: "Error",
         description: "There was an error adding the benefit. Please try again.",
-        variant: "destructive",
       })
     }
   }

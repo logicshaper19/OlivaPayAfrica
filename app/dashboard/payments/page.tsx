@@ -8,7 +8,9 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Users, DollarSign, ArrowUpDown, Receipt } from 'lucide-react'
 
-export default function PaymentsDashboard() {
+export default function PaymentsPage() {
+  const [searchTerm, setSearchTerm] = useState('')
+
   // ... existing code ...
 
   return (
@@ -22,6 +24,7 @@ export default function PaymentsDashboard() {
           <Link href="/dashboard/payments/process">Process Payment</Link>
         </Button>
         <Input
+          type="search"
           className="max-w-sm"
           placeholder="Search payments..."
           value={searchTerm}

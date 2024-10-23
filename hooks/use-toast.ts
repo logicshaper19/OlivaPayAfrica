@@ -3,16 +3,32 @@
 // Inspired by react-hot-toast library
 import * as React from 'react';
 
-import type { ToastActionElement, ToastProps } from '@/components/ui/toast';
+// Remove these lines
+// import type { ToastActionElement } from '@/components/ui/toast';
+// import { ToastType } from '@/components/ui/toastTypes';
 
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1000000;
+
+// Define and export ToastType
+export type ToastType = 'success' | 'error' | 'warning' | 'info';
+
+// Add this type definition
+export type ToastActionElement = React.ReactNode;
+
+// Update the ToastProps interface
+export interface ToastProps {
+  type?: ToastType;
+}
 
 type ToasterToast = ToastProps & {
   id: string;
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: ToastActionElement;
+  type?: ToastType;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 const actionTypes = {
@@ -155,7 +171,7 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
-      onOpenChange: (open) => {
+      onOpenChange: (open: boolean) => {
         if (!open) dismiss();
       },
     },

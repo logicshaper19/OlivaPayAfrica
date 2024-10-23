@@ -9,7 +9,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DollarSign, ArrowUpDown, Calendar, FileText } from 'lucide-react'
 
 export default function TransactionsDashboard() {
-  // ... existing code ...
+  const [searchTerm, setSearchTerm] = useState('')
+  // ... other existing state variables ...
+
+  // ... existing useEffect and other functions ...
 
   return (
     <div className="space-y-6">

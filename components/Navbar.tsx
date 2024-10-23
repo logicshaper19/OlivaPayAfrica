@@ -6,9 +6,10 @@ import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Leaf, Home, Users, DollarSign, Gift, FileText, Settings, UserPlus } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { Session } from '@supabase/supabase-js'
 
 const Navbar = () => {
-  const [session, setSession] = useState(null)
+  const [session, setSession] = useState<Session | null>(null)
   const [onboardingCompleted, setOnboardingCompleted] = useState(false)
   const pathname = usePathname()
 
@@ -79,7 +80,13 @@ const Navbar = () => {
   )
 }
 
-const NavLink = ({ href, icon, label }) => (
+interface NavLinkProps {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+}
+
+const NavLink = ({ href, icon, label }: NavLinkProps) => (
   <Link href={href} className="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
     {icon}
     <span>{label}</span>

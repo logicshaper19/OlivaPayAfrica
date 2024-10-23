@@ -71,7 +71,6 @@ export default function AddEmployee() {
       toast({
         title: "Error",
         description: "There was an error adding the employee. Please try again.",
-        variant: "destructive",
       })
     }
   }

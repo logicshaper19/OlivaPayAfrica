@@ -9,6 +9,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Users, Heart, Building, CheckCircle } from 'lucide-react'
 
 export default function BenefitsDashboard() {
+  const [searchTerm, setSearchTerm] = useState('');
+
   // ... existing code ...
 
   return (

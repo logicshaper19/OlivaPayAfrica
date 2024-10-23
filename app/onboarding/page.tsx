@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -13,8 +13,8 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 export default function Onboarding() {
   const [step, setStep] = useState(1)
-  const [countries, setCountries] = useState([])
-  const [counties, setCounties] = useState([])
+  const [countries, setCountries] = useState<Array<{id: number, name: string}>>([])
+  const [counties, setCounties] = useState<Array<{id: number, name: string}>>([])
   const router = useRouter()
   const { toast } = useToast()
   const [formData, setFormData] = useState({
@@ -31,21 +31,17 @@ export default function Onboarding() {
 
   const supabase = createClientComponentClient()
 
-  useEffect(() => {
-    checkAuth()
-  }, [])
-
-  async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session) {
+  const handleError = useCallback((error: any) => {
+    toast({
+      title: "Error",
+      description: error.message || "An error occurred. Please try again.",
+    })
+    if (error.code === 'PGRST301' || error.name === 'AuthSessionMissingError') {
       router.push('/login')
-    } else {
-      fetchCountries()
-      fetchCompanyData()
     }
-  }
+  }, [toast, router])
 
-  async function fetchCountries() {
+  const fetchCountries = useCallback(async () => {
     try {
       const { data, error } = await supabase.from('country').select('id, name')
       if (error) throw error
@@ -54,9 +50,9 @@ export default function Onboarding() {
       console.error('Error fetching countries:', error)
       handleError(error)
     }
-  }
+  }, [supabase, handleError])
 
-  async function fetchCounties(countryId) {
+  const fetchCounties = useCallback(async (countryId: string) => {
     try {
       const { data, error } = await supabase
         .from('county')
@@ -68,9 +64,9 @@ export default function Onboarding() {
       console.error('Error fetching counties:', error)
       handleError(error)
     }
-  }
+  }, [supabase, handleError])
 
-  async function fetchCompanyData() {
+  const fetchCompanyData = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
@@ -86,36 +82,39 @@ export default function Onboarding() {
       console.error('Error fetching company data:', error)
       handleError(error)
     }
-  }
+  }, [supabase, handleError])
 
-  function handleError(error) {
-    toast({
-      title: "Error",
-      description: error.message || "An error occurred. Please try again.",
-      variant: "destructive",
-    })
-    if (error.code === 'PGRST301' || error.name === 'AuthSessionMissingError') {
+  const checkAuth = useCallback(async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
       router.push('/login')
+    } else {
+      fetchCountries()
+      fetchCompanyData()
     }
-  }
+  }, [supabase, router, fetchCountries, fetchCompanyData])
 
-  const handleInputChange = (e) => {
+  useEffect(() => {
+    checkAuth()
+  }, [checkAuth])
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleSelectChange = (name) => (value) => {
+  const handleSelectChange = (name: string) => (value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }))
     if (name === 'country' && value === '1') {
       fetchCounties(value)
     }
   }
 
-  const handleCheckboxChange = (checked) => {
+  const handleCheckboxChange = (checked: boolean) => {
     setFormData(prev => ({ ...prev, needAssistance: checked }))
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (step < 3) {
       setStep(step + 1)

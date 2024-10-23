@@ -60,7 +60,6 @@ export default function SignUp() {
       toast({
         title: "Sign up failed",
         description: error.message || "There was an error during sign up. Please try again.",
-        variant: "destructive",
       })
     } finally {
       setLoading(false)

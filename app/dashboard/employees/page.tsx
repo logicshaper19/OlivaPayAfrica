@@ -8,8 +8,19 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Users, DollarSign, Heart, Building } from 'lucide-react'
 
+interface Employee {
+  id: string;
+  first_name: string;
+  last_name: string;
+  job_title: string;
+  salary?: number;
+  last_payment?: string;
+  next_payment?: string;
+  payment_frequency?: string;
+}
+
 export default function EmployeesDashboard() {
-  const [employees, setEmployees] = useState([])
+  const [employees, setEmployees] = useState<Employee[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
 
@@ -21,7 +32,7 @@ export default function EmployeesDashboard() {
     try {
       setLoading(true)
       const response = await fetch('/api/employees')
-      const data = await response.json()
+      const data: Employee[] = await response.json()
       setEmployees(data)
     } catch (error) {
       console.error('Error fetching employees:', error)

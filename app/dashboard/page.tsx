@@ -7,14 +7,19 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Users, DollarSign, Gift, AlertCircle, UserPlus, FileText, PieChart } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
+interface PayrollDataItem {
+  month: string;
+  amount: number;
+}
+
 export default function Dashboard() {
   const [userName, setUserName] = useState('')
   const [employeeCount, setEmployeeCount] = useState(0)
   const [totalPayroll, setTotalPayroll] = useState(0)
   const [activeBenefits, setActiveBenefits] = useState(0)
   const [pendingActions, setPendingActions] = useState(0)
-  const [payrollData, setPayrollData] = useState([])
-  const [error, setError] = useState(null)
+  const [payrollData, setPayrollData] = useState<PayrollDataItem[]>([])
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchDashboardData()
@@ -71,11 +76,11 @@ export default function Dashboard() {
       setPayrollData(chartData?.map(item => ({
         month: new Date(item.date).toLocaleString('default', { month: 'short' }),
         amount: item.amount
-      })) || [])
+      })) as PayrollDataItem[] || [])
 
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error fetching dashboard data:', error)
-      setError(error.message)
+      setError(error instanceof Error ? error.message : 'An unknown error occurred')
     }
   }
 

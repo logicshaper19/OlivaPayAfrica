@@ -55,7 +55,6 @@ export default function ProcessPayment() {
       toast({
         title: "Error",
         description: "There was an error processing the payment. Please try again.",
-        variant: "destructive",
       })
     }
   }

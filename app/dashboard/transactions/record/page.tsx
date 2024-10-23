@@ -56,7 +56,6 @@ export default function RecordTransaction() {
       toast({
         title: "Error",
         description: "There was an error recording the transaction. Please try again.",
-        variant: "destructive",
       })
     }
   }
